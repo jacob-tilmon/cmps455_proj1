@@ -48,7 +48,6 @@ public class PhilosopherThread implements Runnable{
             }
             catch (Exception e) {System.out.println(e.getMessage());}
             System.out.println("Philosopher " + id + " has grabbed their left chopstick");
-
             try {
                 boolean attempt = rightChopstick.tryAcquire(random.nextInt(2)+1, TimeUnit.SECONDS);
                 if (!attempt) {
