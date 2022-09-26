@@ -79,7 +79,7 @@ public class Main {
                         System.out.println("Incorrect input, please try again.");
                         input.nextLine();
                     }
-                }while(numReaders <=1);
+                }while(numReaders <=0);
                 do{
                     System.out.print("Enter a number of Writers (int 1+): ");
                     if(input.hasNextInt()) numWriters = input.nextInt();
@@ -87,7 +87,7 @@ public class Main {
                         System.out.println("Incorrect input, please try again.");
                         input.nextLine();
                     }
-                }while(numWriters <=1);
+                }while(numWriters <=0);
                 do{
                     System.out.print("Enter a max number of Readers in shared area (int 1 - "+numReaders+"): ");
                     if(input.hasNextInt()) maxWriters = input.nextInt();
@@ -95,7 +95,7 @@ public class Main {
                         System.out.println("Incorrect input, please try again.");
                         input.nextLine();
                     }
-                }while(maxWriters <=1 || maxWriters > numReaders);
+                }while(maxWriters <=0 || maxWriters > numReaders);
                 readersWritersProblem(numReaders,numWriters,maxWriters);
             }
             else System.out.println("Unexpected argument, please input 1, 2, or 3 after -A in the command prompt.");
