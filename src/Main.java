@@ -16,7 +16,10 @@ public class Main {
         int numWriters =0;
         int maxWriters =0;
 
-        if (args[0].equals("-A")) {
+        if (args.length == 1) {
+            System.out.println("Missing Argument, please type 1,2, or 3 after -A");
+        }
+        else if (args[0].equals("-A")) {
             if (args[1].equals("1")) {
                 do{
                     System.out.print("Enter a number of philosophers (positive int 2+): ");
