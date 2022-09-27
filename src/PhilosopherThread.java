@@ -9,6 +9,7 @@ public class PhilosopherThread implements Runnable{
     Semaphore leftChopstick;
     Semaphore rightChopstick;
     Semaphore barrier;
+    static Semaphore mutex = new Semaphore(1);
     static AtomicInteger arriveCnt = new AtomicInteger(0);
     static AtomicInteger meals;
     static AtomicInteger leaveCnt = new AtomicInteger(0);
@@ -40,8 +41,7 @@ public class PhilosopherThread implements Runnable{
 
         while (meals.get() > 0) { //loop of while there are still meals.
             try {
-                boolean attempt = leftChopstick.tryAcquire(random.nextInt(2)+1, TimeUnit.SECONDS);
-                if (!attempt) {
+                if (!leftChopstick.tryAcquire(random.nextInt(2)+1, TimeUnit.SECONDS)) {
                     System.out.println("Philosopher " + id + " can't grab their left chopstick. Trying again..." );
                     continue;
                 }
@@ -49,8 +49,7 @@ public class PhilosopherThread implements Runnable{
             catch (Exception e) {System.out.println(e.getMessage());}
             System.out.println("Philosopher " + id + " has grabbed their left chopstick");
             try {
-                boolean attempt = rightChopstick.tryAcquire(random.nextInt(2)+1, TimeUnit.SECONDS);
-                if (!attempt) {
+                if (!rightChopstick.tryAcquire(random.nextInt(2)+1, TimeUnit.SECONDS)) {
                     System.out.println("Philosopher " + id + " can't grab their right chopstick. Trying again...");
                     leftChopstick.release();
                     continue;
@@ -62,9 +61,13 @@ public class PhilosopherThread implements Runnable{
             if (meals.get() <=0) {
                 System.out.println("Philosopher " + id + " was too busy waiting to see there were no more meals. Setting down chopsticks.");
                 leftChopstick.release();rightChopstick.release();break;} // some threads could be waiting when no more meals are left and keep going.
+            try{
+                mutex.acquire();
+                meals.getAndDecrement();
+                System.out.println("Philosopher " + id + " is eating. There are " + meals.get() + " meals left.");
+                mutex.release();
+            }catch (Exception e){System.out.println(e.getMessage());}
 
-            meals.getAndDecrement();
-            System.out.println("Philosopher " + id + " is eating. There are " + meals.get() + " meals left.");
             for (int i = 0; i < random.nextInt(4)+3; i++){
                 Thread.yield();
             }
